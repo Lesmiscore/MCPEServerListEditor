@@ -57,7 +57,7 @@ public class MainActivity extends ListActivity
 				public void onClick(View v){
 					final String[] data=(String[])v.getTag();
 					new AlertDialog.Builder(MainActivity.this).
-						setMessage(R.string.deleteConfirm).
+						setMessage(getResources().getString(R.string.deleteConfirm).replace("@server@",data[1])).
 						setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
 							public void onClick(DialogInterface d,int sel){
 								servers.remove(data);
@@ -73,16 +73,78 @@ public class MainActivity extends ListActivity
 			
 			edit.setOnClickListener(new OnClickListener(){
 					public void onClick(View v){
-						final String[] data=(String[])v.getTag();
-						View dialog=getLayoutInflater().inflate(R.layout.compedit,null);
+						final String[] prevData=(String[])v.getTag();
+						final String[] data=((String[])v.getTag()).clone();
+						View dialog=getLayoutInflater().inflate(R.layout.servereditdialog,null);
 						final EditText name=(EditText)dialog.findViewById(R.id.serverName);
 						final EditText ip=(EditText)dialog.findViewById(R.id.serverIp);
 						final EditText port=(EditText)dialog.findViewById(R.id.serverPort);
+						
+						name.setTag(data);
+						ip.setTag(data);
+						port.setTag(data);
+						
+						name.setText(data[1]);
+						ip.setText(data[2]);
+						port.setText(data[3]);
+						
+						name.addTextChangedListener(new TextWatcher(){
+								@Override  
+								public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+								}
+
+								@Override  
+								public void onTextChanged(CharSequence s, int start, int before, int count) {
+									String[] data=(String[])name.getTag();
+									data[1]=s.toString();
+								}
+
+								@Override
+								public void afterTextChanged(Editable s) {
+
+								}
+							});
+						ip.addTextChangedListener(new TextWatcher(){
+								@Override  
+								public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+								}
+
+								@Override  
+								public void onTextChanged(CharSequence s, int start, int before, int count) {
+									String[] data=(String[])ip.getTag();
+									data[2]=s.toString();
+								}
+
+								@Override
+								public void afterTextChanged(Editable s) {
+
+								}
+							});
+						port.addTextChangedListener(new TextWatcher(){
+								@Override  
+								public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+								}
+
+								@Override  
+								public void onTextChanged(CharSequence s, int start, int before, int count) {
+									String[] data=(String[])port.getTag();
+									data[3]=s.toString();
+								}
+
+								@Override
+								public void afterTextChanged(Editable s) {
+
+								}
+							});
 						new AlertDialog.Builder(MainActivity.this).
-							setMessage(R.string.deleteConfirm).
+							setView(dialog).
 							setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
 								public void onClick(DialogInterface d,int sel){
-									
+									servers.set(servers.indexOf(prevData),data);
+									setListAdapter(ila);
 								}
 							}).
 							setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener(){
