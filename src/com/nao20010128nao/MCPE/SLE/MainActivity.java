@@ -62,7 +62,7 @@ public class MainActivity extends ListActivity
 				@Override  
 				public void onTextChanged(CharSequence s, int start, int before, int count) {
 					String[] data=(String[])name.getTag();
-					data[1]=name.getText().toString();
+					data[1]=s.toString();
 				}
 
 				@Override
@@ -79,7 +79,7 @@ public class MainActivity extends ListActivity
 					@Override  
 					public void onTextChanged(CharSequence s, int start, int before, int count) {
 						String[] data=(String[])ip.getTag();
-						data[2]=ip.getText().toString();
+						data[2]=s.toString();
 					}
 
 					@Override
@@ -96,7 +96,7 @@ public class MainActivity extends ListActivity
 					@Override  
 					public void onTextChanged(CharSequence s, int start, int before, int count) {
 						String[] data=(String[])port.getTag();
-						data[3]=port.getText().toString();
+						data[3]=s.toString();
 					}
 
 					@Override
