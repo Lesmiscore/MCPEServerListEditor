@@ -15,7 +15,9 @@
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
 			android:ems="10"
-			android:id="@+id/serverName"/>
+			android:id="@+id/serverName"
+			android:gravity="center"
+			android:textAlignment="center"/>
 
 		<LinearLayout
 			android:layout_width="fill_parent"
@@ -27,7 +29,9 @@
 				android:layout_width="wrap_content"
 				android:ems="10"
 				android:layout_weight="1.0"
-				android:id="@+id/serverIp"/>
+				android:id="@+id/serverIp"
+				android:gravity="center"
+				android:textAlignment="center"/>
 
 			<TextView
 				android:layout_height="wrap_content"
@@ -35,7 +39,9 @@
 				android:layout_width="wrap_content"
 				android:ems="10"
 				android:layout_weight="1.0"
-				android:id="@+id/serverPort"/>
+				android:id="@+id/serverPort"
+				android:gravity="center"
+				android:textAlignment="center"/>
 
 		</LinearLayout>
 
