@@ -11,6 +11,7 @@ import android.util.*;
 import android.widget.TextView.*;
 import android.net.*;
 import android.text.*;
+import android.content.*;
 
 public class MainActivity extends ListActivity
 {
@@ -40,76 +41,58 @@ public class MainActivity extends ListActivity
 			String[] data=getItem(position);
 			data[0]=Integer.toString(position);
 			convertView.setTag(data);
-			final EditText name=(EditText)convertView.findViewById(R.id.serverName);
-			final EditText ip=(EditText)convertView.findViewById(R.id.serverIp);
-			final EditText port=(EditText)convertView.findViewById(R.id.serverPort);
+			TextView name=(TextView)convertView.findViewById(R.id.serverName);
+			TextView ip=(TextView)convertView.findViewById(R.id.serverIp);
+			TextView port=(TextView)convertView.findViewById(R.id.serverPort);
 			ImageButton delete=(ImageButton)convertView.findViewById(R.id.serverDelete);
+			ImageButton edit=(ImageButton)convertView.findViewById(R.id.serverEdit);
 			name.setText(data[1]);
 			ip.setText(data[2]);
 			port.setText(data[3]);
 			
-			name.setTag(data);
-			ip.setTag(data);
-			port.setTag(data);
 			delete.setTag(data);
+			edit.setTag(data);
 			
-			name.addTextChangedListener(new TextWatcher(){
-				@Override  
-				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-					
-				}
-
-				@Override  
-				public void onTextChanged(CharSequence s, int start, int before, int count) {
-					String[] data=(String[])name.getTag();
-					data[1]=s.toString();
-				}
-
-				@Override
-				public void afterTextChanged(Editable s) {
-					
-				}
-			});
-			ip.addTextChangedListener(new TextWatcher(){
-					@Override  
-					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-					}
-
-					@Override  
-					public void onTextChanged(CharSequence s, int start, int before, int count) {
-						String[] data=(String[])ip.getTag();
-						data[2]=s.toString();
-					}
-
-					@Override
-					public void afterTextChanged(Editable s) {
-
-					}
-				});
-			port.addTextChangedListener(new TextWatcher(){
-					@Override  
-					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-					}
-
-					@Override  
-					public void onTextChanged(CharSequence s, int start, int before, int count) {
-						String[] data=(String[])port.getTag();
-						data[3]=s.toString();
-					}
-
-					@Override
-					public void afterTextChanged(Editable s) {
-
-					}
-				});
 			delete.setOnClickListener(new OnClickListener(){
 				public void onClick(View v){
-					String[] data=(String[])v.getTag();
-					
+					final String[] data=(String[])v.getTag();
+					new AlertDialog.Builder(MainActivity.this).
+						setMessage(R.string.deleteConfirm).
+						setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
+							public void onClick(DialogInterface d,int sel){
+								servers.remove(data);
+								setListAdapter(ila);
+							}
+						}).
+						setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener(){
+							public void onClick(DialogInterface d,int sel){}
+						}).
+						show();
 				}
 			});
+			
+			edit.setOnClickListener(new OnClickListener(){
+					public void onClick(View v){
+						final String[] data=(String[])v.getTag();
+						View dialog=getLayoutInflater().inflate(R.layout.compedit,null);
+						final EditText name=(EditText)dialog.findViewById(R.id.serverName);
+						final EditText ip=(EditText)dialog.findViewById(R.id.serverIp);
+						final EditText port=(EditText)dialog.findViewById(R.id.serverPort);
+						new AlertDialog.Builder(MainActivity.this).
+							setMessage(R.string.deleteConfirm).
+							setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
+								public void onClick(DialogInterface d,int sel){
+									
+								}
+							}).
+							setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener(){
+								public void onClick(DialogInterface d,int sel){
+									
+								}
+							}).
+							show();
+					}
+				});
 			return convertView;
 		}
 	}
