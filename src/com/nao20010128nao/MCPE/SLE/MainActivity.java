@@ -10,6 +10,7 @@ import android.view.View.*;
 import android.util.*;
 import android.widget.TextView.*;
 import android.net.*;
+import android.text.*;
 
 public class MainActivity extends ListActivity
 {
@@ -33,15 +34,15 @@ public class MainActivity extends ListActivity
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
 			// TODO: Implement this method
-			if(convertView!=null)
-				return convertView;
-			convertView=getLayoutInflater().inflate(R.layout.compedit,null);
+			Log.d("InternalListAdapter","offset:"+position);
+			if(convertView==null)
+				convertView=getLayoutInflater().inflate(R.layout.compedit,null);
 			String[] data=getItem(position);
 			data[0]=Integer.toString(position);
 			convertView.setTag(data);
-			EditText name=(EditText)convertView.findViewById(R.id.serverName);
-			EditText ip=(EditText)convertView.findViewById(R.id.serverIp);
-			EditText port=(EditText)convertView.findViewById(R.id.serverPort);
+			final EditText name=(EditText)convertView.findViewById(R.id.serverName);
+			final EditText ip=(EditText)convertView.findViewById(R.id.serverIp);
+			final EditText port=(EditText)convertView.findViewById(R.id.serverPort);
 			ImageButton delete=(ImageButton)convertView.findViewById(R.id.serverDelete);
 			name.setText(data[1]);
 			ip.setText(data[2]);
@@ -52,25 +53,55 @@ public class MainActivity extends ListActivity
 			port.setTag(data);
 			delete.setTag(data);
 			
-			name.setOnEditorActionListener(new OnEditorActionListener(){
-				public boolean onEditorAction(TextView v,int type,KeyEvent ev){
-					String[] data=(String[])v.getTag();
-					data[1]=v.getText().toString();
-					return true;
+			name.addTextChangedListener(new TextWatcher(){
+				@Override  
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+					
+				}
+
+				@Override  
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+					String[] data=(String[])name.getTag();
+					data[1]=name.getText().toString();
+				}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					
 				}
 			});
-			ip.setOnEditorActionListener(new OnEditorActionListener(){
-					public boolean onEditorAction(TextView v,int type,KeyEvent ev){
-						String[] data=(String[])v.getTag();
-						data[2]=v.getText().toString();
-						return true;
+			ip.addTextChangedListener(new TextWatcher(){
+					@Override  
+					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+					}
+
+					@Override  
+					public void onTextChanged(CharSequence s, int start, int before, int count) {
+						String[] data=(String[])ip.getTag();
+						data[2]=ip.getText().toString();
+					}
+
+					@Override
+					public void afterTextChanged(Editable s) {
+
 					}
 				});
-			port.setOnEditorActionListener(new OnEditorActionListener(){
-					public boolean onEditorAction(TextView v,int type,KeyEvent ev){
-						String[] data=(String[])v.getTag();
-						data[3]=v.getText().toString();
-						return true;
+			port.addTextChangedListener(new TextWatcher(){
+					@Override  
+					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+					}
+
+					@Override  
+					public void onTextChanged(CharSequence s, int start, int before, int count) {
+						String[] data=(String[])port.getTag();
+						data[3]=port.getText().toString();
+					}
+
+					@Override
+					public void afterTextChanged(Editable s) {
+
 					}
 				});
 			delete.setOnClickListener(new OnClickListener(){
