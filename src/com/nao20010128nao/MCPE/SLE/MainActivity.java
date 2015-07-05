@@ -7,31 +7,37 @@ import android.widget.*;
 import java.util.*;
 import java.io.*;
 import android.view.View.*;
+import android.util.*;
+import android.widget.TextView.*;
+import android.net.*;
 
 public class MainActivity extends ListActivity
 {
     /** Called when the activity is first created. */
-	List<String[]> servers=null;
+	static List<String[]> servers=null;
+	boolean save=false;
+	InternalListAdapter ila=null;
     @Override
     public void onCreate(Bundle savedInstanceState)
 	{
         super.onCreate(savedInstanceState);
-        setListAdapter(new InternalListAdapter());
+        setListAdapter(ila=new InternalListAdapter());
     }
 	class InternalListAdapter extends ArrayAdapter<String[]>
 	{
 		public InternalListAdapter(){
-			super(MainActivity.this,0,servers=loadFile());
+			super(MainActivity.this,0,servers==null?servers=loadFile():servers);
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
 			// TODO: Implement this method
-			if(convertView!=null)return convertView;
+			if(convertView!=null)
+				return convertView;
+			convertView=getLayoutInflater().inflate(R.layout.compedit,null);
 			String[] data=getItem(position);
 			data[0]=Integer.toString(position);
-			convertView=getLayoutInflater().inflate(R.layout.compedit,null);
 			convertView.setTag(data);
 			EditText name=(EditText)convertView.findViewById(R.id.serverName);
 			EditText ip=(EditText)convertView.findViewById(R.id.serverIp);
@@ -46,6 +52,27 @@ public class MainActivity extends ListActivity
 			port.setTag(data);
 			delete.setTag(data);
 			
+			name.setOnEditorActionListener(new OnEditorActionListener(){
+				public boolean onEditorAction(TextView v,int type,KeyEvent ev){
+					String[] data=(String[])v.getTag();
+					data[1]=v.getText().toString();
+					return true;
+				}
+			});
+			ip.setOnEditorActionListener(new OnEditorActionListener(){
+					public boolean onEditorAction(TextView v,int type,KeyEvent ev){
+						String[] data=(String[])v.getTag();
+						data[2]=v.getText().toString();
+						return true;
+					}
+				});
+			port.setOnEditorActionListener(new OnEditorActionListener(){
+					public boolean onEditorAction(TextView v,int type,KeyEvent ev){
+						String[] data=(String[])v.getTag();
+						data[3]=v.getText().toString();
+						return true;
+					}
+				});
 			delete.setOnClickListener(new OnClickListener(){
 				public void onClick(View v){
 					String[] data=(String[])v.getTag();
@@ -62,6 +89,7 @@ public class MainActivity extends ListActivity
 			br=new BufferedReader(new InputStreamReader(new FileInputStream(new File(Environment.getExternalStorageDirectory(),"/games/com.mojang/minecraftpe/external_servers.txt"))));
 			while(true){
 				String s=br.readLine();
+				Log.d("readLine",s);
 				if(s==null)break;
 				al.add(s.split("\\:"));
 			}
@@ -76,5 +104,67 @@ public class MainActivity extends ListActivity
 			}
 		}
 		return al;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		// TODO: Implement this method
+		menu.add(0,1,0,R.string.apply).setIcon(android.R.drawable.ic_menu_save);
+		menu.add(0,2,0,android.R.string.cancel).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+		menu.add(0,3,0,R.string.add).setIcon(android.R.drawable.ic_menu_add);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(/*int featureId, */MenuItem item)
+	{
+		// TODO: Implement this method
+		switch(item.getItemId()){
+			case 1:
+				save=true;
+			case 2:
+				finish();
+				break;
+			case 3:
+				servers.add(new String[]{"0","A Minecraft:PE server","localhost","19132"});
+				setListAdapter(ila);
+				break;
+		}
+		return true;
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		// TODO: Implement this method
+		super.onDestroy();
+		if(!save)
+			return;
+		FileWriter fw=null;
+		try{
+			fw=new FileWriter(new File(Environment.getExternalStorageDirectory(),"/games/com.mojang/minecraftpe/external_servers.txt"));
+			for(String[] s:servers){
+				fw.append(join(s)+"\n");
+			}
+		}catch(Throwable ex){
+			ex.printStackTrace();
+		}finally{
+			try{
+				if (fw != null)
+					fw.close();
+			}catch (IOException e){
+
+			}
+		}
+	}
+	String join(String[] ary){
+		StringBuilder builder = new StringBuilder();
+
+		for(int i=0; i<ary.length-1; i++) {
+			builder.append(ary[i]).append(":");
+		}
+
+		return builder.append(ary[ary.length-1]).toString();
 	}
 }
