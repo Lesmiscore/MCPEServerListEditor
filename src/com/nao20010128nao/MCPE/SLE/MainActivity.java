@@ -12,10 +12,12 @@ import android.widget.TextView.*;
 import android.net.*;
 import android.text.*;
 import android.content.*;
+import java.lang.reflect.*;
 
 public class MainActivity extends ListActivity
 {
     /** Called when the activity is first created. */
+	static Method finishMethod=findFinish();
 	static List<String[]> servers=null;
 	boolean save=false;
 	InternalListAdapter ila=null;
@@ -200,7 +202,12 @@ public class MainActivity extends ListActivity
 			case 1:
 				save=true;
 			case 2:
-				finish();
+				try{
+					finishMethod.invoke(this);
+				}catch(Throwable ex){
+					//unreachable
+					ex.printStackTrace();
+				}
 				break;
 			case 3:
 				servers.add(new String[]{"0","A Minecraft:PE server","localhost","19132"});
@@ -242,5 +249,21 @@ public class MainActivity extends ListActivity
 		}
 
 		return builder.append(ary[ary.length-1]).toString();
+	}
+	static Method findFinish(){
+		Class actClas=Activity.class;
+		try{
+			return actClas.getDeclaredMethod("finishAndRemoveTask");
+		}catch(Throwable ex){
+			ex.printStackTrace();
+		}
+		try{
+			//finish() must be found
+			return actClas.getDeclaredMethod("finish");
+		}catch(Throwable ex){
+			//unreachable
+			ex.printStackTrace();
+		}
+		return null;//unreachable
 	}
 }
