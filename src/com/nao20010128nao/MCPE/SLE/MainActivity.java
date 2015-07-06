@@ -167,8 +167,8 @@ public class MainActivity extends ListActivity
 			br=new BufferedReader(new InputStreamReader(new FileInputStream(new File(Environment.getExternalStorageDirectory(),"/games/com.mojang/minecraftpe/external_servers.txt"))));
 			while(true){
 				String s=br.readLine();
-				Log.d("readLine",s);
 				if(s==null)break;
+				Log.d("readLine",s);
 				al.add(s.split("\\:"));
 			}
 		}catch(Throwable ex){
