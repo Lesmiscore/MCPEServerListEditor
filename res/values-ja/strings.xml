@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MCPE ServerList Editor</string>
+	<string name="add">新規追加</string>
+	<string name="apply">適用</string>
+	<string name="deleteConfirm">\"@server@\"を削除しますがよろしいですか?</string>
+</resources>
