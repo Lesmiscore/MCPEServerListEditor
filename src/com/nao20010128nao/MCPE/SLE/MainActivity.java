@@ -63,7 +63,7 @@ public class MainActivity extends ListActivity
 						setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
 							public void onClick(DialogInterface d,int sel){
 								servers.remove(data);
-								setListAdapter(ila);
+								refreshListView();
 							}
 						}).
 						setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener(){
@@ -146,7 +146,7 @@ public class MainActivity extends ListActivity
 							setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener(){
 								public void onClick(DialogInterface d,int sel){
 									servers.set(servers.indexOf(prevData),data);
-									setListAdapter(ila);
+									refreshListView();
 								}
 							}).
 							setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener(){
@@ -211,7 +211,7 @@ public class MainActivity extends ListActivity
 				break;
 			case 3:
 				servers.add(new String[]{"0","A Minecraft:PE server","localhost","19132"});
-				setListAdapter(ila);
+				refreshListView();
 				break;
 		}
 		return true;
@@ -265,5 +265,8 @@ public class MainActivity extends ListActivity
 			ex.printStackTrace();
 		}
 		return null;//unreachable
+	}
+	public void refreshListView(){
+		ila.notifyDataSetChanged();
 	}
 }
