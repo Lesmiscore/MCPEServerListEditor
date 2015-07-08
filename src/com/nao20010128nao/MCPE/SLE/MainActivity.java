@@ -210,7 +210,7 @@ public class MainActivity extends ListActivity
 				}
 				break;
 			case 3:
-				servers.add(new String[]{"0","A Minecraft:PE server","localhost","19132"});
+				servers.add(new String[]{"0","A Minecraft PE server","localhost","19132"});
 				refreshListView();
 				break;
 		}
